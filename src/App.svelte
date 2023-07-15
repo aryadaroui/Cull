@@ -5,10 +5,14 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import { onMount } from "svelte";
   import { ImageViewer } from "./canvas";
+  import type { FileEntry } from "@tauri-apps/api/fs";
 
   let canvas: HTMLCanvasElement;
-
+  let viewer: ImageViewer;
   let read_dir: string;
+  let img_files: FileEntry[];
+  let img_idx: number = 0;
+  let img_node: HTMLImageElement;
 
   async function choose_dir() {
     open({
@@ -19,20 +23,39 @@
       read_dir = selecton.toString();
       console.log("read dir: ", read_dir);
 
-      const entries = await readDir(read_dir, { recursive: false });
-      entries.forEach((entry) => {
-        console.log("entry: ", entry);
-      });
+      img_files = await readDir(read_dir, { recursive: false });
+      img_idx = 0;
+
+      
+      // viewer.set_image(convertFileSrc(img_files[img_idx].path));
+      img_node.src = convertFileSrc(img_files[img_idx].path);
     });
   }
 
-  let viewer: ImageViewer;
+  function next() {
+    if (img_idx < img_files.length - 1) {
+      img_idx++;
+    } else {
+      img_idx = 0;
+    }
+    
+    // viewer.set_image(convertFileSrc(img_files[img_idx].path));
+    img_node.src = convertFileSrc(img_files[img_idx].path);
+    console.log("fillesrc: ", convertFileSrc(img_files[img_idx].path))
+  }
 
-  onMount(() => {
-    viewer = new ImageViewer(canvas);
+  function prev() {
+    if (img_idx > 0) {
+      img_idx--;
+    } else {
+      img_idx = img_files.length - 1;
+    }
+    
+    // viewer.set_image(convertFileSrc(img_files[img_idx].path));
+    img_node.src = convertFileSrc(img_files[img_idx].path);
+  }
 
-    // call the reset() function when the user presses the enter key
-    window.addEventListener("keydown", (e) => {
+  window.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         viewer.reset();
       }
@@ -42,20 +65,26 @@
       }
 
       if (e.key === "ArrowRight") {
-        // viewer.next();
-        console.log("next");
+        next();
       }
 
       if (e.key === "ArrowLeft") {
-        // viewer.prev();
-        console.log("prev");
+        prev();
       }
     });
+
+  onMount(() => {
+    viewer = new ImageViewer(canvas);
+
+    // call the reset() function when the user presses the enter key
+
   });
 </script>
 
 <main id="windowframe">
-  <canvas bind:this={canvas} />
+
+  <img bind:this={img_node} >
+  <!-- <canvas bind:this={canvas} /> -->
   <div id="toolbar">
     <button id="choose-dir" on:click={choose_dir}> Choose folder</button>
     <button
@@ -91,6 +120,10 @@
         max-width: 200px;
         height: 28px;
       }
+    }
+
+    img {
+      width: 50vw;
     }
 
     canvas {

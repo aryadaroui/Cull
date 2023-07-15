@@ -3,13 +3,13 @@
 
 
 export class ImageViewer {
-	canvas: HTMLCanvasElement;
-	ctx: CanvasRenderingContext2D;
+	private canvas: HTMLCanvasElement;
+	private ctx: CanvasRenderingContext2D;
 	image: HTMLImageElement;
-	aspect_ratio: number;
-	scale: number;
-	offsetX: number;
-	offsetY: number;
+	// aspect_ratio: number; 
+	private scale: number;
+	private offsetX: number;
+	private offsetY: number;
 
 	// mouse_x: number;
 	// mouse_y: number;
@@ -40,7 +40,7 @@ export class ImageViewer {
 		this.image.src = image_url;
 
 		this.image.onload = () => {
-			this.aspect_ratio = this.image.width / this.image.height;
+			// this.aspect_ratio = this.image.width / this.image.height; // not needed
 			this.reset();
 		};
 	}
