@@ -11,7 +11,7 @@
     pan_y = 0;
 
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
-    transform();
+    set_transform();
   }
 
   //   export let src: string;
@@ -25,6 +25,9 @@
   onMount(() => {
     // img_node.src = src;
     img_node.src = "/untitled.jpg";
+
+	
+
 
     img_node.addEventListener("transitionend", () => {
       img_node.style.transition = "";
@@ -58,7 +61,7 @@
       pan_x = new_pan_x;
       pan_y = new_pan_y;
 
-      transform();
+      set_transform();
     });
 
     let isDragging = false;
@@ -79,7 +82,7 @@
         const deltaY = event.clientY - lastY;
         pan_x += deltaX;
         pan_y += deltaY;
-        transform();
+        set_transform();
         lastX = event.clientX;
         lastY = event.clientY;
       }
@@ -90,9 +93,9 @@
     });
   });
 
-  function transform() {
+  function set_transform() {
     img_node.style.transform =
-      "translate(" + pan_x + "px, " + pan_y + "px) scale(" + zoom + ")";
+      "translate(" + pan_x + "px," + pan_y + "px) scale(" + zoom + ")";
   }
 </script>
 
@@ -108,11 +111,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    // border: 1px solid black;
     overflow: hidden;
     background-color: rgba(32, 32, 32, 0.7);
     user-select: none;
-    -webkit-user-select: none;
     -webkit-user-drag: none;
     cursor: grab;
     &:active {
@@ -122,7 +124,6 @@
 
   img {
     user-select: none;
-    -webkit-user-select: none;
     -webkit-user-drag: none;
     height: 100%;
     width: auto;

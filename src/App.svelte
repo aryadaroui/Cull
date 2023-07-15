@@ -19,11 +19,18 @@
       title: "Choose a directory", // including this speeds up dialog open time on macOS for unknown reason
     }).then(async (selecton) => {
       read_dir = selecton.toString();
-      console.log("read dir: ", read_dir);
 
       img_files = await readDir(read_dir, { recursive: false });
-      img_idx = 0;
+      img_files = img_files.filter((file) => {
+        const imageExtensions = [".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff"];
+        const extension = file.name
+          .substring(file.name.lastIndexOf("."))
+          .toLowerCase();
+        return imageExtensions.includes(extension);
+      });
+      img_files.sort((a, b) => a.name.localeCompare(b.name));
 
+      img_idx = 0;
       const path_str = convertFileSrc(img_files[img_idx].path);
       image_viewer.set_image(path_str);
     });
