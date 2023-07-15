@@ -7,7 +7,7 @@
   import { convertFileSrc } from "@tauri-apps/api/tauri";
   import { invoke } from "@tauri-apps/api/tauri";
   import { onMount } from "svelte";
-  import { ImageViewer } from "./better_canvas";
+  import { ImageViewer } from "./canvas";
 
   let canvas: HTMLCanvasElement;
 
