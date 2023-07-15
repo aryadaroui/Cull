@@ -4,15 +4,13 @@
   import { convertFileSrc } from "@tauri-apps/api/tauri";
   import { invoke } from "@tauri-apps/api/tauri";
   import { onMount } from "svelte";
-  // import { ImageViewer } from "./canvas";
+  import ImageViewer from "./ImageViewer.svelte";
   import type { FileEntry } from "@tauri-apps/api/fs";
 
-  let canvas: HTMLCanvasElement;
-  // let viewer: ImageViewer;
   let read_dir: string;
   let img_files: FileEntry[];
   let img_idx: number = 0;
-  let img_node: HTMLImageElement;
+  let image_viewer: ImageViewer;
 
   async function choose_dir() {
     open({
@@ -27,15 +25,7 @@
       img_idx = 0;
 
       const path_str = convertFileSrc(img_files[img_idx].path);
-
-      // viewer.set_image(path_str);
-      
-      img_node.src = path_str;
-      const start_time = new Date().getTime();
-      img_node.onload = () => {
-        const load_time = new Date().getTime() - start_time;
-        console.log(`Image loaded in ${load_time}ms`);
-      };
+      image_viewer.set_image(path_str);
     });
   }
 
@@ -47,13 +37,7 @@
     }
 
     const path_str = convertFileSrc(img_files[img_idx].path);
-
-    const start_time = new Date().getTime();
-    img_node.src = path_str;
-    img_node.onload = () => {
-      const load_time = new Date().getTime() - start_time;
-      console.log(`Image loaded in ${load_time}ms`);
-    };
+    image_viewer.set_image(path_str);
   }
 
   function prev() {
@@ -64,19 +48,12 @@
     }
 
     const path_str = convertFileSrc(img_files[img_idx].path);
-    // viewer.set_image(path_str);
-
-    img_node.src = path_str;
-    const start_time = new Date().getTime();
-    img_node.onload = () => {
-      const load_time = new Date().getTime() - start_time;
-      console.log(`Image loaded in ${load_time}ms`);
-    };
+    image_viewer.set_image(path_str);
   }
 
   window.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      // viewer.reset();
+      image_viewer.reset();
     }
 
     if (e.key === "o" && e.metaKey) {
@@ -92,21 +69,20 @@
     }
   });
 
-  onMount(() => {
-    // viewer = new ImageViewer(canvas);
-    img_node.src = "./untitled.jpg";
-  });
+  // onMount(() => {
+
+  // });
 </script>
 
 <main id="windowframe">
-  <img bind:this={img_node} />
-  <!-- <canvas bind:this={canvas} /> -->
+  <ImageViewer bind:this={image_viewer} />
+
   <div id="toolbar">
     <button id="choose-dir" on:click={choose_dir}> Choose folder</button>
     <button
       id="choose-dir"
       on:click={() => {
-        // viewer.reset();
+        image_viewer.reset();
       }}
     >
       Reset</button
@@ -135,21 +111,6 @@
       button#choose-dir {
         max-width: 200px;
         height: 28px;
-      }
-    }
-
-    img {
-      width: 50vw;
-    }
-
-    canvas {
-      background-color: rgba(32, 32, 32, 0.7);
-      width: calc(100vw - 2px);
-      height: calc(100vh - 30px - 200px);
-
-      cursor: grab;
-      &:active {
-        cursor: grabbing;
       }
     }
 
