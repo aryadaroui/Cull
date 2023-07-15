@@ -36,12 +36,14 @@ export class ImageViewer {
 	}
 
 	set_image(image_url) {
+		const start_time = new Date().getTime();
 		this.image = new Image();
 		this.image.src = image_url;
-
 		this.image.onload = () => {
 			// this.aspect_ratio = this.image.width / this.image.height; // not needed
+			const load_time = new Date().getTime() - start_time;
 			this.reset();
+			console.log(`Image loaded in ${load_time}ms`);
 		};
 	}
 

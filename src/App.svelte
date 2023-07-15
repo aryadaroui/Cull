@@ -26,9 +26,16 @@
       img_files = await readDir(read_dir, { recursive: false });
       img_idx = 0;
 
+      const path_str = convertFileSrc(img_files[img_idx].path);
+
+      viewer.set_image(path_str);
       
-      // viewer.set_image(convertFileSrc(img_files[img_idx].path));
-      img_node.src = convertFileSrc(img_files[img_idx].path);
+      // img_node.src = path_str;
+      // const start_time = new Date().getTime();
+      // img_node.onload = () => {
+      //   const load_time = new Date().getTime() - start_time;
+      //   console.log(`Image loaded in ${load_time}ms`);
+      // };
     });
   }
 
@@ -38,10 +45,17 @@
     } else {
       img_idx = 0;
     }
-    
-    // viewer.set_image(convertFileSrc(img_files[img_idx].path));
-    img_node.src = convertFileSrc(img_files[img_idx].path);
-    console.log("fillesrc: ", convertFileSrc(img_files[img_idx].path))
+
+    const path_str = convertFileSrc(img_files[img_idx].path);
+
+    viewer.set_image(path_str);
+
+    // const start_time = new Date().getTime();
+    // img_node.src = path_str;
+    // img_node.onload = () => {
+    //   const load_time = new Date().getTime() - start_time;
+    //   console.log(`Image loaded in ${load_time}ms`);
+    // };
   }
 
   function prev() {
@@ -50,41 +64,45 @@
     } else {
       img_idx = img_files.length - 1;
     }
-    
-    // viewer.set_image(convertFileSrc(img_files[img_idx].path));
-    img_node.src = convertFileSrc(img_files[img_idx].path);
+
+    const path_str = convertFileSrc(img_files[img_idx].path);
+    viewer.set_image(path_str);
+
+    // img_node.src = path_str;
+    // const start_time = new Date().getTime();
+    // img_node.onload = () => {
+    //   const load_time = new Date().getTime() - start_time;
+    //   console.log(`Image loaded in ${load_time}ms`);
+    // };
   }
 
   window.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        viewer.reset();
-      }
+    if (e.key === "Enter") {
+      viewer.reset();
+    }
 
-      if (e.key === "o" && e.metaKey) {
-        choose_dir();
-      }
+    if (e.key === "o" && e.metaKey) {
+      choose_dir();
+    }
 
-      if (e.key === "ArrowRight") {
-        next();
-      }
+    if (e.key === "ArrowRight") {
+      next();
+    }
 
-      if (e.key === "ArrowLeft") {
-        prev();
-      }
-    });
+    if (e.key === "ArrowLeft") {
+      prev();
+    }
+  });
 
   onMount(() => {
     viewer = new ImageViewer(canvas);
-
-    // call the reset() function when the user presses the enter key
-
+    // img_node.src = "./untitled.jpg";
   });
 </script>
 
 <main id="windowframe">
-
-  <img bind:this={img_node} >
-  <!-- <canvas bind:this={canvas} /> -->
+  <!-- <img bind:this={img_node} /> -->
+  <canvas bind:this={canvas} />
   <div id="toolbar">
     <button id="choose-dir" on:click={choose_dir}> Choose folder</button>
     <button
