@@ -5,28 +5,32 @@
 
 // use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
-// fn
+use tauri::Manager;
+use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+// #[tauri::command]
+// fn greet(name: &str) -> String {
+//     format!("Hello, {}! You've been greeted from Rust!", name)
+// }
 
 fn main() {
-    // let menu = Menu::new();
-    // // here `"quit".to_string()` defines the menu item id, and the second parameter is the menu item label.
-    // let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    // let close = CustomMenuItem::new("close".to_string(), "Close");
-    // let submenu = Submenu::new("File", Menu::new().add_item(quit).add_item(close));
-    // let menu = Menu::new()
-    //     .add_native_item(MenuItem::Copy)
-    //     .add_item(CustomMenuItem::new("hide", "Hide"))
-    //     .add_submenu(submenu);
+    // tauri::Builder::default()
+    //     .invoke_handler(tauri::generate_handler![greet])
+    //     .run(tauri::generate_context!())
+    //     .expect("error while running tauri application");
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
-        // .menu(menu)
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+    .setup(|app| {
+      let window = app.get_window("main").unwrap();
+
+      #[cfg(target_os = "macos")]
+      apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, Some(16.0))
+        .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+
+      Ok(())
+    })
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }

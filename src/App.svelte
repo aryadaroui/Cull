@@ -51,36 +51,28 @@
   <div id="toolbar">
     <button id="choose-dir" on:click={choose_dir}> Choose folder</button>
   </div>
-
-  <!-- <div id="canvas" /> -->
-
-  <!-- <img src="/untitled.jpg" class="logo tauri" alt="Tauri Logo" /> -->
-
   <canvas bind:this={canvas} />
-
-  <!-- <canvas id="myCanvas" /> -->
-
   <div id="reel" />
 </main>
 
 <style lang="scss">
-  :global(body) {
-    margin: 0;
-  }
+
+
 
   main#windowframe {
+    
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 100vw;
+    width: calc(100vw - 2px);
+
     div#toolbar {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
       height: 30px;
-      width: 100vw;
-      background-color: #222;
+      width: calc(100vw - 2px);
 
       button#choose-dir {
         max-width: 200px;
@@ -89,17 +81,20 @@
     }
 
     canvas {
-      // display: block;
-      background: #000;
-      // border: 1px solid #333;
-      // width: calc(100vw - 2px);
+      background-color: rgba(32, 32, 32, 0.7);
+      width: calc(100vw - 2px);
       height: calc(100vh - 30px - 200px);
+
+      cursor: grab;
+      &:active {
+        cursor: grabbing;
+      }
     }
 
     div#reel {
+      background-color: rgba(40, 40, 40, 1.0);
       height: 200px;
-      width: 100vw;
-      background-color: #222;
+      width: calc(100vw - 2px);
     }
   }
 </style>
