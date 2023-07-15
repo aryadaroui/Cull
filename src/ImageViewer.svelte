@@ -11,7 +11,7 @@
     pan_y = 0;
 
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
-    img_node.style.transform = transform_string(pan_x, pan_y, zoom);
+    transform();
   }
 
   //   export let src: string;
@@ -58,7 +58,7 @@
       pan_x = new_pan_x;
       pan_y = new_pan_y;
 
-      img_node.style.transform = transform_string(pan_x, pan_y, zoom);
+      transform();
     });
 
     let isDragging = false;
@@ -66,18 +66,20 @@
     let lastY = 0;
 
     viewer.addEventListener("mousedown", (event) => {
+      event.preventDefault();
       isDragging = true;
       lastX = event.clientX;
       lastY = event.clientY;
     });
 
     viewer.addEventListener("mousemove", (event) => {
+      event.preventDefault();
       if (isDragging) {
         const deltaX = event.clientX - lastX;
         const deltaY = event.clientY - lastY;
         pan_x += deltaX;
         pan_y += deltaY;
-        img_node.style.transform = transform_string(pan_x, pan_y, zoom);
+        transform();
         lastX = event.clientX;
         lastY = event.clientY;
       }
@@ -88,8 +90,9 @@
     });
   });
 
-  function transform_string(pan_x: number, pan_y: number, zoom: number) {
-    return `translate(${pan_x}px, ${pan_y}px) scale(${zoom})`;
+  function transform() {
+    img_node.style.transform =
+      "translate(" + pan_x + "px, " + pan_y + "px) scale(" + zoom + ")";
   }
 </script>
 
@@ -123,6 +126,8 @@
     -webkit-user-drag: none;
     height: 100%;
     width: auto;
+
+    translate: translate(0px, 100px);
 
     cursor: grab;
     &:active {
