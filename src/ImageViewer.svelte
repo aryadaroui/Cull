@@ -9,7 +9,7 @@
     zoom = 1;
     pan_x = 0;
     pan_y = 0;
-    img_node.style.transition = `transform 0.2s`;
+    img_node.style.transition = `transform 0.2s cubic-bezier(.5,1.5,.7,.9)`;
     img_node.style.transform = `translate(${pan_x}px, ${pan_y}px) scale(${zoom})`;
   }
 
