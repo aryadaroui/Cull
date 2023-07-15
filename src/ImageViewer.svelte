@@ -9,8 +9,8 @@
     zoom = 1;
     pan_x = 0;
     pan_y = 0;
-    img_node.style.transition = `transform 0.2s cubic-bezier(.5,1.5,.7,.9)`;
-    img_node.style.transform = `translate(${pan_x}px, ${pan_y}px) scale(${zoom})`;
+    img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
+    img_node.style.transform = transform_string(pan_x, pan_y, zoom);
   }
 
   //   export let src: string;
@@ -25,43 +25,69 @@
     // img_node.src = src;
     img_node.src = "/untitled.jpg";
 
-    viewer.addEventListener("wheel", handle_zoom);
-    viewer.addEventListener("mousedown", () => {
-      viewer.addEventListener("mousemove", handle_pan);
-    });
-    viewer.addEventListener("mouseup", () => {
-      viewer.removeEventListener("mousemove", handle_pan);
-    });
+    let velocity_x: number = 0;
+    let velocity_y: number = 0;
+    let last_x: number = 0;
+    let last_y: number = 0;
+    let is_dragging: boolean = false;
 
     img_node.addEventListener("transitionend", () => {
       img_node.style.transition = "";
+    });
+
+    viewer.addEventListener("wheel", (event) => {
+      img_node.style.transition = "";
+      const delta = event.deltaY;
+      const zoom_factor = 0.1;
+
+      if (delta > 0) {
+        zoom -= zoom_factor;
+      } else {
+        zoom += zoom_factor;
+      }
+
+      zoom = Math.max(0.1, zoom);
+      img_node.style.transform = transform_string(pan_x, pan_y, zoom);
+    });
+
+    viewer.addEventListener("mousedown", (event: MouseEvent) => {
+      is_dragging = true;
+      last_x = event.clientX;
+      last_y = event.clientY;
+    });
+
+    viewer.addEventListener("mousemove", (event: MouseEvent) => {
+      if (is_dragging) {
+        const delta_x = event.clientX - last_x;
+        const delta_y = event.clientY - last_y;
+        last_x = event.clientX;
+        last_y = event.clientY;
+        pan_x += delta_x;
+        pan_y += delta_y;
+        img_node.style.transform = transform_string(pan_x, pan_y, zoom);
+        velocity_x = delta_x;
+        velocity_y = delta_y;
+      }
+    });
+
+    viewer.addEventListener("mouseup", () => {
+      is_dragging = false;
+      const inertia_interval = setInterval(() => {
+        if (Math.abs(velocity_x) < 0.1 && Math.abs(velocity_y) < 0.1) {
+          clearInterval(inertia_interval);
+          return;
+        }
+        pan_x += velocity_x;
+        pan_y += velocity_y;
+        img_node.style.transform = transform_string(pan_x, pan_y, zoom);
+        velocity_x *= 0.97;
+        velocity_y *= 0.97;
+      }, 5);
     });
   });
 
   function transform_string(pan_x: number, pan_y: number, zoom: number) {
     return `translate(${pan_x}px, ${pan_y}px) scale(${zoom})`;
-  }
-
-  function handle_zoom(event: WheelEvent) {
-    img_node.style.transition = "";
-    const delta = event.deltaY;
-    const zoom_factor = 0.1;
-
-    if (delta > 0) {
-      zoom -= zoom_factor;
-    } else {
-      zoom += zoom_factor;
-    }
-
-    zoom = Math.max(0.1, zoom);
-    img_node.style.transform = transform_string(pan_x, pan_y, zoom);
-  }
-
-  function handle_pan(event: MouseEvent) {
-    img_node.style.transition = "";
-    pan_x += event.movementX;
-    pan_y += event.movementY;
-    img_node.style.transform = transform_string(pan_x, pan_y, zoom);
   }
 </script>
 
@@ -91,11 +117,8 @@
   img {
     user-select: none;
     -webkit-user-drag: none;
-    // width: 50%;
     height: 100%;
     width: auto;
-
-    // transition: transform 0.25s;
 
     cursor: grab;
     &:active {
