@@ -40,16 +40,32 @@
 
     viewer.addEventListener("wheel", (event) => {
       img_node.style.transition = "";
-      const delta = event.deltaY;
-      const zoom_factor = 0.1;
 
-      if (delta > 0) {
-        zoom -= zoom_factor;
-      } else {
-        zoom += zoom_factor;
-      }
+      const cursor_x = event.clientX - viewer.clientLeft;
+      const cursor_y = event.clientY - viewer.clientTop;
+      const cursor_x_ratio = cursor_x / viewer.clientWidth;
+      const cursor_y_ratio = cursor_y / viewer.clientHeight;
 
-      zoom = Math.max(0.1, zoom);
+      const zoom_factor = 0.08;
+      const max_zoom = 10;
+      const min_zoom = 0.1;
+      const zoom_delta = (event.deltaY > 0 ? -1 : 1) * zoom_factor;
+      const new_zoom = Math.min(
+        Math.max(zoom + zoom_delta, min_zoom),
+        max_zoom
+      );
+
+      const pan_x_delta =
+        (cursor_x_ratio - 0.5) * viewer.clientWidth * (zoom - new_zoom);
+      const pan_y_delta =
+        (cursor_y_ratio - 0.5) * viewer.clientHeight * (zoom - new_zoom);
+      const new_pan_x = pan_x + pan_x_delta;
+      const new_pan_y = pan_y + pan_y_delta;
+
+      zoom = new_zoom;
+      pan_x = new_pan_x;
+      pan_y = new_pan_y;
+
       img_node.style.transform = transform_string(pan_x, pan_y, zoom);
     });
 
