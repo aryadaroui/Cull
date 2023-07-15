@@ -4,11 +4,11 @@
   import { convertFileSrc } from "@tauri-apps/api/tauri";
   import { invoke } from "@tauri-apps/api/tauri";
   import { onMount } from "svelte";
-  import { ImageViewer } from "./canvas";
+  // import { ImageViewer } from "./canvas";
   import type { FileEntry } from "@tauri-apps/api/fs";
 
   let canvas: HTMLCanvasElement;
-  let viewer: ImageViewer;
+  // let viewer: ImageViewer;
   let read_dir: string;
   let img_files: FileEntry[];
   let img_idx: number = 0;
@@ -28,14 +28,14 @@
 
       const path_str = convertFileSrc(img_files[img_idx].path);
 
-      viewer.set_image(path_str);
+      // viewer.set_image(path_str);
       
-      // img_node.src = path_str;
-      // const start_time = new Date().getTime();
-      // img_node.onload = () => {
-      //   const load_time = new Date().getTime() - start_time;
-      //   console.log(`Image loaded in ${load_time}ms`);
-      // };
+      img_node.src = path_str;
+      const start_time = new Date().getTime();
+      img_node.onload = () => {
+        const load_time = new Date().getTime() - start_time;
+        console.log(`Image loaded in ${load_time}ms`);
+      };
     });
   }
 
@@ -48,14 +48,12 @@
 
     const path_str = convertFileSrc(img_files[img_idx].path);
 
-    viewer.set_image(path_str);
-
-    // const start_time = new Date().getTime();
-    // img_node.src = path_str;
-    // img_node.onload = () => {
-    //   const load_time = new Date().getTime() - start_time;
-    //   console.log(`Image loaded in ${load_time}ms`);
-    // };
+    const start_time = new Date().getTime();
+    img_node.src = path_str;
+    img_node.onload = () => {
+      const load_time = new Date().getTime() - start_time;
+      console.log(`Image loaded in ${load_time}ms`);
+    };
   }
 
   function prev() {
@@ -66,19 +64,19 @@
     }
 
     const path_str = convertFileSrc(img_files[img_idx].path);
-    viewer.set_image(path_str);
+    // viewer.set_image(path_str);
 
-    // img_node.src = path_str;
-    // const start_time = new Date().getTime();
-    // img_node.onload = () => {
-    //   const load_time = new Date().getTime() - start_time;
-    //   console.log(`Image loaded in ${load_time}ms`);
-    // };
+    img_node.src = path_str;
+    const start_time = new Date().getTime();
+    img_node.onload = () => {
+      const load_time = new Date().getTime() - start_time;
+      console.log(`Image loaded in ${load_time}ms`);
+    };
   }
 
   window.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      viewer.reset();
+      // viewer.reset();
     }
 
     if (e.key === "o" && e.metaKey) {
@@ -95,20 +93,20 @@
   });
 
   onMount(() => {
-    viewer = new ImageViewer(canvas);
-    // img_node.src = "./untitled.jpg";
+    // viewer = new ImageViewer(canvas);
+    img_node.src = "./untitled.jpg";
   });
 </script>
 
 <main id="windowframe">
-  <!-- <img bind:this={img_node} /> -->
-  <canvas bind:this={canvas} />
+  <img bind:this={img_node} />
+  <!-- <canvas bind:this={canvas} /> -->
   <div id="toolbar">
     <button id="choose-dir" on:click={choose_dir}> Choose folder</button>
     <button
       id="choose-dir"
       on:click={() => {
-        viewer.reset();
+        // viewer.reset();
       }}
     >
       Reset</button
