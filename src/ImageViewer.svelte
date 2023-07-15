@@ -9,6 +9,9 @@
     zoom = 1;
     pan_x = 0;
     pan_y = 0;
+	velocity_x = 0;
+	velocity_y = 0;
+
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
     img_node.style.transform = transform_string(pan_x, pan_y, zoom);
   }
@@ -20,13 +23,13 @@
   let zoom: number = 1;
   let pan_x: number = 0;
   let pan_y: number = 0;
+  let velocity_x: number = 0;
+  let velocity_y: number = 0;
 
   onMount(() => {
     // img_node.src = src;
     img_node.src = "/untitled.jpg";
 
-    let velocity_x: number = 0;
-    let velocity_y: number = 0;
     let last_x: number = 0;
     let last_y: number = 0;
     let is_dragging: boolean = false;
