@@ -9,8 +9,8 @@
     zoom = 1;
     pan_x = 0;
     pan_y = 0;
-	velocity_x = 0;
-	velocity_y = 0;
+    velocity_x = 0;
+    velocity_y = 0;
 
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
     img_node.style.transform = transform_string(pan_x, pan_y, zoom);
@@ -54,6 +54,7 @@
     });
 
     viewer.addEventListener("mousedown", (event: MouseEvent) => {
+      event.preventDefault();
       is_dragging = true;
       last_x = event.clientX;
       last_y = event.clientY;
@@ -85,7 +86,7 @@
         img_node.style.transform = transform_string(pan_x, pan_y, zoom);
         velocity_x *= 0.97;
         velocity_y *= 0.97;
-      }, 5);
+      }, 1);
     });
   });
 
@@ -110,6 +111,7 @@
     overflow: hidden;
     background-color: rgba(32, 32, 32, 0.7);
     user-select: none;
+    -webkit-user-select: none;
     -webkit-user-drag: none;
     cursor: grab;
     &:active {
@@ -119,6 +121,7 @@
 
   img {
     user-select: none;
+    -webkit-user-select: none;
     -webkit-user-drag: none;
     height: 100%;
     width: auto;
