@@ -1,3 +1,5 @@
+# `<img>` is a bit faster than `<canvas>`
+
 
 
 canvas times in ms
@@ -18,3 +20,17 @@ canvas times in ms
 
 
 img times in ms
+
+```
+10
+5
+4
+6
+6
+11
+12
+11
+13
+12
+```
+
