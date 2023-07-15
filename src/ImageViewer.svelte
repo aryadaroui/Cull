@@ -9,8 +9,6 @@
     zoom = 1;
     pan_x = 0;
     pan_y = 0;
-    velocity_x = 0;
-    velocity_y = 0;
 
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
     img_node.style.transform = transform_string(pan_x, pan_y, zoom);
@@ -23,16 +21,10 @@
   let zoom: number = 1;
   let pan_x: number = 0;
   let pan_y: number = 0;
-  let velocity_x: number = 0;
-  let velocity_y: number = 0;
 
   onMount(() => {
     // img_node.src = src;
     img_node.src = "/untitled.jpg";
-
-    let last_x: number = 0;
-    let last_y: number = 0;
-    let is_dragging: boolean = false;
 
     img_node.addEventListener("transitionend", () => {
       img_node.style.transition = "";
@@ -69,40 +61,30 @@
       img_node.style.transform = transform_string(pan_x, pan_y, zoom);
     });
 
-    viewer.addEventListener("mousedown", (event: MouseEvent) => {
-      event.preventDefault();
-      is_dragging = true;
-      last_x = event.clientX;
-      last_y = event.clientY;
+    let isDragging = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    viewer.addEventListener("mousedown", (event) => {
+      isDragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
     });
 
-    viewer.addEventListener("mousemove", (event: MouseEvent) => {
-      if (is_dragging) {
-        const delta_x = event.clientX - last_x;
-        const delta_y = event.clientY - last_y;
-        last_x = event.clientX;
-        last_y = event.clientY;
-        pan_x += delta_x;
-        pan_y += delta_y;
+    viewer.addEventListener("mousemove", (event) => {
+      if (isDragging) {
+        const deltaX = event.clientX - lastX;
+        const deltaY = event.clientY - lastY;
+        pan_x += deltaX;
+        pan_y += deltaY;
         img_node.style.transform = transform_string(pan_x, pan_y, zoom);
-        velocity_x = delta_x;
-        velocity_y = delta_y;
+        lastX = event.clientX;
+        lastY = event.clientY;
       }
     });
 
     viewer.addEventListener("mouseup", () => {
-      is_dragging = false;
-      const inertia_interval = setInterval(() => {
-        if (Math.abs(velocity_x) < 0.1 && Math.abs(velocity_y) < 0.1) {
-          clearInterval(inertia_interval);
-          return;
-        }
-        pan_x += velocity_x;
-        pan_y += velocity_y;
-        img_node.style.transform = transform_string(pan_x, pan_y, zoom);
-        velocity_x *= 0.97;
-        velocity_y *= 0.97;
-      }, 1);
+      isDragging = false;
     });
   });
 
