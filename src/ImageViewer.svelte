@@ -91,6 +91,11 @@
     viewer.addEventListener("mouseup", () => {
       isDragging = false;
     });
+
+	viewer.addEventListener("mouseleave", () => {
+	  isDragging = false;
+	});
+
   });
 
   function set_transform() {
