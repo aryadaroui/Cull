@@ -19,7 +19,7 @@ button {
   border: 1px solid transparent;
   color: #AAA;
   background-color: rgba(0.2, 0.2, 0.2, 0.2);
-  transition: border-color 0.25s;
+  transition: border-color 0.15s;
 }
 
 button {
@@ -28,6 +28,11 @@ button {
 
 button:hover {
   border-color: #39abd8;
+}
+
+button:active {
+  border-color: #0073ff;
+  background-color: rgba(0.2, 0.2, 0.2, 0.5);
 }
 
 input,

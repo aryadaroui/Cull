@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { lazyLoad } from "./lazy_load";
+
+  let reel: HTMLDivElement;
 
   // grab some place holder images
   async function fetchData() {
@@ -14,9 +17,21 @@
       throw new Error(data);
     }
   }
+
+  onMount(() => {
+    reel.addEventListener("wheel", (event) => {
+
+      if (!event.deltaY) {
+        return;
+      }
+
+      event.currentTarget.scrollLeft += event.deltaY + event.deltaX;
+      event.preventDefault();
+    });
+  });
 </script>
 
-<div id="reel">
+<div bind:this={reel} class="reel">
   <!-- <div id="pad" /> -->
 
   {#await fetchData()}
@@ -35,7 +50,7 @@
 </div>
 
 <style lang="scss">
-  #reel {
+  div.reel {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
