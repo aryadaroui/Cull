@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
   import ImageViewer from "./ImageViewer.svelte";
   import Toolbar from "./Toolbar.svelte";
+  import Reel from "./Reel.svelte";
   import type { FileEntry } from "@tauri-apps/api/fs";
 
   let read_dir: string;
@@ -83,20 +84,21 @@
       prev();
     }
   });
-
 </script>
 
 <main id="windowframe">
   <ImageViewer bind:this={image_viewer} />
 
   <Toolbar
-    choose_dir={choose_dir}
+    {choose_dir}
     center={() => {
       image_viewer.reset();
     }}
   />
 
-  <div id="reel" />
+  <div id="reel">
+    <Reel />
+  </div>
 </main>
 
 <style lang="scss">
