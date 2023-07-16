@@ -58,3 +58,25 @@ with single Image
 6
 5
 ```
+
+
+
+# Caching thumbnails and fullsize
+
+
+
+
+
+```
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21
+        ^_^_|_^_^_^__^__^
+```
+
+will check for `cache[img_idx]` on each load, if it fails, then do a full load. on load end, then replace cache entry/entries.
+
+
+
+
+
+
+

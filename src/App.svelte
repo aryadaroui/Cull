@@ -5,6 +5,7 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import { onMount } from "svelte";
   import ImageViewer from "./ImageViewer.svelte";
+  import Toolbar from "./Toolbar.svelte";
   import type { FileEntry } from "@tauri-apps/api/fs";
 
   let read_dir: string;
@@ -22,7 +23,14 @@
 
       img_files = await readDir(read_dir, { recursive: false });
       img_files = img_files.filter((file) => {
-        const imageExtensions = [".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff"];
+        const imageExtensions = [
+          ".jpg",
+          ".jpeg",
+          ".png",
+          ".webp",
+          ".tif",
+          ".tiff",
+        ];
         const extension = file.name
           .substring(file.name.lastIndexOf("."))
           .toLowerCase();
@@ -76,25 +84,17 @@
     }
   });
 
-  // onMount(() => {
-
-  // });
 </script>
 
 <main id="windowframe">
   <ImageViewer bind:this={image_viewer} />
 
-  <div id="toolbar">
-    <button id="choose-dir" on:click={choose_dir}> Choose folder</button>
-    <button
-      id="choose-dir"
-      on:click={() => {
-        image_viewer.reset();
-      }}
-    >
-      Reset</button
-    >
-  </div>
+  <Toolbar
+    choose_dir={choose_dir}
+    center={() => {
+      image_viewer.reset();
+    }}
+  />
 
   <div id="reel" />
 </main>
