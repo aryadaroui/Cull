@@ -17,7 +17,8 @@
 </script>
 
 <div id="reel">
-  <div id="pad" />
+  <!-- <div id="pad" /> -->
+
   {#await fetchData()}
     <p>loading</p>
   {:then items}
@@ -52,7 +53,7 @@
     scroll-snap-type: x mandatory;
 
     #pad {
-      width: 50px;
+      width: 50vw;
       height: 200px;
       background-color: rgba(0, 0, 0, 1);
     }
