@@ -13,6 +13,7 @@
   let img_files: FileEntry[];
   let img_idx: number = 0;
   let image_viewer: ImageViewer;
+  let reel: Reel;
 
   async function choose_dir() {
     open({
@@ -42,6 +43,8 @@
       img_idx = 0;
       const path_str = convertFileSrc(img_files[img_idx].path);
       image_viewer.set_image(path_str);
+
+      reel.set_images(img_files.map((file) => convertFileSrc(file.path)));
     });
   }
 
@@ -54,6 +57,8 @@
 
     const path_str = convertFileSrc(img_files[img_idx].path);
     image_viewer.set_image(path_str);
+    console.log("app next");
+    reel.next();
   }
 
   function prev() {
@@ -65,6 +70,7 @@
 
     const path_str = convertFileSrc(img_files[img_idx].path);
     image_viewer.set_image(path_str);
+    reel.prev();
   }
 
   window.addEventListener("keydown", (e) => {
@@ -97,7 +103,7 @@
   />
 
   <div id="reel">
-    <Reel />
+    <Reel bind:this={reel}/>
   </div>
 </main>
 
@@ -123,10 +129,10 @@
       }
     }
 
-    div#reel {
-      background-color: rgba(40, 40, 40, 1);
-      height: 200px;
-      width: calc(100vw - 2px);
-    }
+    // div#reel {
+    //   background-color: rgba(40, 40, 40, 1);
+    //   height: 200px;
+    //   width: calc(100vw - 2px);
+    // }
   }
 </style>
