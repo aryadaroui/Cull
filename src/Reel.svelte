@@ -1,19 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { invoke } from "@tauri-apps/api/tauri";
   import { convertFileSrc } from "@tauri-apps/api/tauri";
   import ImageBlobReduce from "image-blob-reduce";
 
-  // import { lazyLoad } from "./lazy_load";
-
   let reel: HTMLDivElement;
-  let images: string[] = [];
-  // let rust_test: HTMLImageElement;
+  let img_srcs: string[] = [];
 
   const reducer = new ImageBlobReduce();
 
-  export function set_images(imgs: string[]) {
-    images = imgs;
+  export function set_images(new_img_srcs: string[]) {
+    img_srcs = new_img_srcs;
   }
 
   export function next() {
@@ -30,28 +26,23 @@
     threshold: 0,
   };
 
-  export const lazyLoad = (image, src_url) => {
+  async function make_thumbnail(src_url: string, max_size: number) {
+    const blob = await fetch(src_url).then((r) => r.blob());
+    const thumbnail = await reducer.toBlob(blob, { max: max_size });
+    return URL.createObjectURL(thumbnail);
+  }
+
+  export const lazyLoad = (image: HTMLImageElement, src_url: string) => {
     const loaded = () => {
       image.style.opacity = "1"; // REPL hack to apply loading animation
     };
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        // console.log("src_url: ", src_url);
-        // invoke("downscale_img", {
-        //   img_file_path: src_url,
-        // }).then((res) => {
-        //   image.src = "data:image/jpeg;base64," + res;
-        // });
 
-        let img_blob = fetch(convertFileSrc(src_url)).then((r) => {
-          r.blob().then((blob) => {
-            reducer.toBlob(blob, { max: 150 }).then((blob) => {
-              image.src = URL.createObjectURL(blob);
-            });
-          });
+        make_thumbnail(convertFileSrc(src_url), 150).then((url) => {
+          image.src = url;
         });
 
-        // image.src = src_url; // replace placeholder src with the image src on observe
         if (image.complete) {
           // check if instantly loaded
           loaded();
@@ -70,16 +61,6 @@
   };
 
   onMount(() => {
-    // Invoke the command
-    // invoke("downscale_img", {
-    //   img_file_path:
-    //     "/Users/aryadaroui/Documents/Code/Cull/Test_data/small.png",
-    // }).then((res) => {
-    //   // print class name of res
-    //   // console.log(res.constructor.name);
-    //   rust_test.src = "data:image/jpeg;base64," + res;
-    // });
-
     reel.addEventListener("wheel", (event) => {
       if (!event.deltaY) {
         return;
@@ -93,19 +74,6 @@
       event.preventDefault();
     });
   });
-
-  //   {#await fetchData()}
-  //     <p>loading</p>
-  //   {:then items}
-  //     {#each items as image}
-  //       <figure>
-  //         <!-- svelte-ignore a11y-missing-attribute -->
-  //         <img use:lazyLoad={image.url} />
-  //       </figure>
-  //     {/each}
-  //   {:catch error}
-  //     <p style="color: red">{error.message}</p>
-  //   {/await}
 </script>
 
 <div bind:this={reel} class="reel">
@@ -117,11 +85,11 @@
     <!-- <img bind:this={rust_test} /> -->
   </div>
 
-  {#each images as image}
+  {#each img_srcs as img_src, idx}
     <div class="reel-item">
       <!-- svelte-ignore a11y-missing-attribute -->
       <!-- <img src={image} /> -->
-      <img use:lazyLoad={image} />
+      <img use:lazyLoad={img_src} />
     </div>
   {/each}
 
@@ -174,6 +142,7 @@
       cursor: pointer;
       margin: 0 20px;
       image-rendering: optimizeSpeed;
+      transition: height 0.2s ease-in-out;
     }
 
     #center-marker {
