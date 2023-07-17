@@ -3,7 +3,7 @@
   import { lazyLoad } from "./lazy_load";
 
   let reel: HTMLDivElement;
-  let images: string[] = ["/untitled.jpg"];
+  let images: string[] = [];
 
   export function set_images(imgs: string[]) {
     images = imgs;
@@ -70,7 +70,8 @@
   {#each images as image}
     <div class="reel-item">
       <!-- svelte-ignore a11y-missing-attribute -->
-      <img src={image} />
+      <!-- <img src={image} /> -->
+      <img use:lazyLoad={image} />
     </div>
   {/each}
 
@@ -78,7 +79,7 @@
     <div id="pad" />
   </div>
 
-  <!-- <div id="center-marker" /> -->
+  <div id="center-marker" />
 </div>
 
 <style lang="scss">
@@ -103,8 +104,12 @@
     scroll-snap-type: x mandatory;
 
     ::-webkit-scrollbar {
-		width: 0;
+      width: 0;
       display: none;
+    }
+
+    .reel-item {
+      border: 1px solid gray;
     }
 
     #pad {
@@ -118,7 +123,7 @@
       scroll-snap-align: center;
       cursor: pointer;
       margin: 0 20px;
-      // scroll-margin-left: 50vw;
+      image-rendering: optimizeSpeed;
     }
 
     #center-marker {
@@ -126,7 +131,7 @@
       left: 50vw;
       width: 1px;
       height: 200px;
-      border: 1px solid red;
+      border: 1px solid white;
     }
   }
 </style>

@@ -34,6 +34,7 @@
     viewer.addEventListener("wheel", (event) => {
       // zoom center based on mouse cursor position
       // BUG: zoom center is not correct when image is panned
+      // could use this: https://stackoverflow.com/questions/60190965/zoom-scale-at-mouse-position
 
       img_node.style.transition = "";
 
