@@ -52,7 +52,8 @@
     if (img_idx < img_files.length - 1) {
       img_idx++;
     } else {
-      img_idx = 0;
+      // img_idx = 0;
+      console.log("END OF REEL");
     }
 
     const path_str = convertFileSrc(img_files[img_idx].path);
@@ -65,7 +66,8 @@
     if (img_idx > 0) {
       img_idx--;
     } else {
-      img_idx = img_files.length - 1;
+      // img_idx = img_files.length - 1;
+      console.log("START OF REEL");
     }
 
     const path_str = convertFileSrc(img_files[img_idx].path);

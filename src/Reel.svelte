@@ -110,7 +110,7 @@
     #pad {
       width: calc(50vw - 75px - 20px - 2px);
       height: 200px;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(16, 16, 16, 0.2);
     }
 
     img {

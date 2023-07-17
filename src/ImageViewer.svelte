@@ -11,6 +11,7 @@
     pan_y = 0;
 
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
+    img_node.style.imageRendering = "auto";
     set_transform();
   }
 
@@ -26,9 +27,6 @@
     // img_node.src = src;
     img_node.src = "/untitled.jpg";
 
-	
-
-
     img_node.addEventListener("transitionend", () => {
       img_node.style.transition = "";
     });
@@ -41,8 +39,8 @@
       const cursor_x_ratio = cursor_x / viewer.clientWidth;
       const cursor_y_ratio = cursor_y / viewer.clientHeight;
 
-      const zoom_factor = 0.08;
-      const max_zoom = 10;
+      const zoom_factor = 0.1;
+      const max_zoom = 20;
       const min_zoom = 0.1;
       const zoom_delta = (event.deltaY > 0 ? -1 : 1) * zoom_factor;
       const new_zoom = Math.min(
@@ -60,6 +58,12 @@
       zoom = new_zoom;
       pan_x = new_pan_x;
       pan_y = new_pan_y;
+
+      if (zoom > 4) {
+        img_node.style.imageRendering = "pixelated";
+      } else {
+        img_node.style.imageRendering = "auto";
+      }
 
       set_transform();
     });
@@ -92,10 +96,9 @@
       isDragging = false;
     });
 
-	viewer.addEventListener("mouseleave", () => {
-	  isDragging = false;
-	});
-
+    viewer.addEventListener("mouseleave", () => {
+      isDragging = false;
+    });
   });
 
   function set_transform() {
@@ -132,6 +135,7 @@
     -webkit-user-drag: none;
     height: 100%;
     width: auto;
+    // image-rendering: pixelated;
 
     translate: translate(0px, 100px);
 
