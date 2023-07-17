@@ -11,7 +11,7 @@
     pan_y = 0;
 
     img_node.style.transition = `transform 0.2s cubic-bezier(.5, 1.5, .7, .9)`;
-    img_node.style.imageRendering = "auto";
+    img_node.style.imageRendering = "auto"; // maybe try optimizeSpeed
     set_transform();
   }
 
@@ -63,7 +63,7 @@
       pan_x = new_pan_x;
       pan_y = new_pan_y;
 
-      if (zoom > 4) {
+      if (zoom > 8) {
         img_node.style.imageRendering = "pixelated";
       } else {
         img_node.style.imageRendering = "auto";

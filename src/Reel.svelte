@@ -1,9 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { lazyLoad } from "./lazy_load";
+  import { invoke } from "@tauri-apps/api/tauri";
+  import { convertFileSrc } from "@tauri-apps/api/tauri";
+
+  // import { lazyLoad } from "./lazy_load";
 
   let reel: HTMLDivElement;
   let images: string[] = [];
+  // let rust_test: HTMLImageElement;
 
   export function set_images(imgs: string[]) {
     images = imgs;
@@ -17,24 +21,55 @@
     reel.scrollBy(-100, 0);
   }
 
-  //   // grab some place holder images
-  //   async function fetchData() {
-  //     const res = await fetch(
-  //       "https://jsonplaceholder.typicode.com/photos?_start=0&_limit=20"
-  //     );
-  //     const data = await res.json();
+  let lazy_load_opts = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0,
+  };
 
-  //     if (res.ok) {
-  //       return data;
-  //     } else {
-  //       throw new Error(data);
-  //     }
-  //   }
+  export const lazyLoad = (image, src_url) => {
+    const loaded = () => {
+      image.style.opacity = "1"; // REPL hack to apply loading animation
+    };
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log("src_url: ", src_url);
+        invoke("downscale_img", {
+          img_file_path: src_url,
+        }).then((res) => {
+          image.src = "data:image/jpeg;base64," + res;
+        });
+
+        // image.src = src_url; // replace placeholder src with the image src on observe
+        if (image.complete) {
+          // check if instantly loaded
+          loaded();
+        } else {
+          image.addEventListener("load", loaded); // if the image isn't loaded yet, add an event listener
+        }
+      }
+    }, lazy_load_opts);
+    observer.observe(image); // intersection observer
+
+    return {
+      destroy() {
+        image.removeEventListener("load", loaded); // clean up the event listener
+      },
+    };
+  };
 
   onMount(() => {
-    reel.addEventListener("wheel", (event) => {
-      // console.log(event.deltaY);
+    // Invoke the command
+    // invoke("downscale_img", {
+    //   img_file_path:
+    //     "/Users/aryadaroui/Documents/Code/Cull/Test_data/small.png",
+    // }).then((res) => {
+    //   // print class name of res
+    //   // console.log(res.constructor.name);
+    //   rust_test.src = "data:image/jpeg;base64," + res;
+    // });
 
+    reel.addEventListener("wheel", (event) => {
       if (!event.deltaY) {
         return;
       } else if (Math.abs(event.deltaY) < 20) {
@@ -65,6 +100,10 @@
 <div bind:this={reel} class="reel">
   <div class="reel-item">
     <div id="pad" />
+  </div>
+
+  <div class="reel-item">
+    <!-- <img bind:this={rust_test} /> -->
   </div>
 
   {#each images as image}

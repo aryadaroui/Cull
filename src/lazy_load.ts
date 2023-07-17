@@ -1,5 +1,3 @@
-import sharp from "sharp";
-
 // See how the options work here: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
 let options = {
   root: null,
@@ -7,16 +5,14 @@ let options = {
   threshold: 0,
 };
 
-export const lazyLoad = (image, src) => {
+export const lazyLoad = (image, src_url) => {
   const loaded = () => {
-    //image.classList.add('visible')                          // doesn't work in REPL
     image.style.opacity = "1"; // REPL hack to apply loading animation
   };
   const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
-      //   console.log('an image has loaded')                  // console log for REPL
-      
-      image.src = src; // replace placeholder src with the image src on observe
+
+      image.src = src_url; // replace placeholder src with the image src on observe
       if (image.complete) {
         // check if instantly loaded
         loaded();

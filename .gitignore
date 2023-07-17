@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-Test data*
+*Test data*
+*Test_data*
 *playground*

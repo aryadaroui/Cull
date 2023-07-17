@@ -44,7 +44,8 @@
       const path_str = convertFileSrc(img_files[img_idx].path);
       image_viewer.set_image(path_str);
 
-      reel.set_images(img_files.map((file) => convertFileSrc(file.path)));
+      // reel.set_images(img_files.map((file) => convertFileSrc(file.path)));
+      reel.set_images(img_files.map((file) => file.path));
     });
   }
 
