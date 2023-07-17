@@ -59,7 +59,7 @@
 
     const path_str = convertFileSrc(img_files[img_idx].path);
     image_viewer.set_image(path_str);
-    console.log("app next");
+    // console.log("app next");
     reel.next();
   }
 

@@ -2,12 +2,15 @@
   import { onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/tauri";
   import { convertFileSrc } from "@tauri-apps/api/tauri";
+  import ImageBlobReduce from "image-blob-reduce";
 
   // import { lazyLoad } from "./lazy_load";
 
   let reel: HTMLDivElement;
   let images: string[] = [];
   // let rust_test: HTMLImageElement;
+
+  const reducer = new ImageBlobReduce();
 
   export function set_images(imgs: string[]) {
     images = imgs;
@@ -33,11 +36,19 @@
     };
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        console.log("src_url: ", src_url);
-        invoke("downscale_img", {
-          img_file_path: src_url,
-        }).then((res) => {
-          image.src = "data:image/jpeg;base64," + res;
+        // console.log("src_url: ", src_url);
+        // invoke("downscale_img", {
+        //   img_file_path: src_url,
+        // }).then((res) => {
+        //   image.src = "data:image/jpeg;base64," + res;
+        // });
+
+        let img_blob = fetch(convertFileSrc(src_url)).then((r) => {
+          r.blob().then((blob) => {
+            reducer.toBlob(blob, { max: 150 }).then((blob) => {
+              image.src = URL.createObjectURL(blob);
+            });
+          });
         });
 
         // image.src = src_url; // replace placeholder src with the image src on observe
