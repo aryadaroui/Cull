@@ -76,7 +76,11 @@ will check for `cache[img_idx]` on each load, if it fails, then do a full load. 
 
 
 
+## Filter popover
 
+can use CSS `visibility:none`, and then on:click, set the popover div to :focus. which is visible. That way, there's native functionality for clicking outside the div and making it go away.
+
+Might be too many clicks though. May want to also do :hover for visibility instead
 
 
 

@@ -32,6 +32,9 @@
     });
 
     viewer.addEventListener("wheel", (event) => {
+      // zoom center based on mouse cursor position
+      // BUG: zoom center is not correct when image is panned
+
       img_node.style.transition = "";
 
       const cursor_x = event.clientX - viewer.clientLeft;
